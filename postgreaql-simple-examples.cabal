@@ -20,6 +20,9 @@ executable postgreaql-simple-examples
   -- other-modules:       
   -- other-extensions:    
   build-depends:       base >=4.7 && <4.8,
-    postgresql-simple         >= 0.1     && < 0.7
+    postgresql-simple         >= 0.1     && < 0.7,
+    text                      >= 0.1,
+    bytestring                >= 0.1,
+    transformers              >= 0.1
   -- hs-source-dirs:      
   default-language:    Haskell2010

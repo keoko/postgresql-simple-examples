@@ -1,15 +1,18 @@
 {-# LANGUAGE OverloadedStrings #-}
+module Main where
 
 import Database.PostgreSQL.Simple
+import qualified Clients as C
+import qualified Words as W
 
-myconn :: ConnectInfo
-myconn = defaultConnectInfo {
-             connectUser = "natxo",
-             connectPassword = "natxo",
-             connectDatabase = "helloworld"}
+connection :: IO (Connection)
+connection = connectPostgreSQL "postgresql://natxo@localhost/helloworld"
+
+mainSimple :: IO ()
+mainSimple = do
+  conn <- connection
+  putStrLn "2 + 2"
+  mapM_ print =<< (query_ conn "select 2 + 2" :: IO [Only Int])
 
 main :: IO ()
-main = do
-   c <- connect myconn :: IO Connection
-   rs <- query_ c "select 2 + 4" :: IO [Only Int]
-   putStrLn $ "Result from database " ++ show (fromOnly $ head rs)
+main = mainSimple
