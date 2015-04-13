@@ -1,3 +1,4 @@
+-- source: http://www.stephendiehl.com/posts/haskell_web.html
 {-# LANGUAGE OverloadedStrings #-}
 
 module Clients where
@@ -6,12 +7,8 @@ import Data.Text
 import Data.ByteString (ByteString)
 import Control.Applicative
 import Control.Monad
-import Control.Monad.IO.Class  (liftIO)
 import Database.PostgreSQL.Simple
 import Database.PostgreSQL.Simple.FromRow
-
-import qualified Data.ByteString as B
-import qualified Database.PostgreSQL.Simple as Pg
 
 data Client = Client { firstName :: Text
                      , lastName :: Text
@@ -25,10 +22,10 @@ data Location = Location { address :: Text
 uri :: ByteString
 uri = "postgres://natxo@localhost/helloworld"
 
-instance Pg.FromRow Location where
+instance FromRow Location where
   fromRow = Location <$> field <*> field
 
-instance Pg.FromRow Client where
+instance FromRow Client where
   fromRow = Client <$> field <*> field <*> liftM2 Location field field
 
 
