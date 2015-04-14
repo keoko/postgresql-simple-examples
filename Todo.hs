@@ -1,10 +1,6 @@
 {-# LANGUAGE OverloadedStrings #-}
 module Todo where
 
--- get todo item
--- add new item
--- delete item
--- update item
 -- auto increment id field
 -- uuid for id field
 -- null values on title
@@ -43,6 +39,11 @@ getTodoItem c id = query c "SELECT id, title, completed FROM todo WHERE id = ?" 
 addTodoItem :: Connection -> TodoItem -> IO Int64
 addTodoItem c i = execute c "INSERT INTO todo (id, title, completed) VALUES (?, ?, ?)" i
 
+removeTodoItem :: Connection -> TodoItem -> IO Int64
+removeTodoItem c i = execute c "DELETE FROM todo WHERE id = ?" $ Only $ todoId i
+
+changeTodoItem :: Connection -> TodoItem -> IO Int64
+changeTodoItem c i = execute c "UPDATE todo SET title = ?, completed = ? WHERE id = ?" (todoTitle i, todoCompleted i, todoId i)
 
 main :: IO ()
 main = do
@@ -51,3 +52,6 @@ main = do
   mapM_ (putStrLn . show) =<< allTodoItems conn
   mapM_ (putStrLn . show) =<< getTodoItem conn 2
   putStrLn . show =<< addTodoItem conn TodoItem {todoId=2, todoTitle="test", todoCompleted=False}
+  putStrLn . show =<< changeTodoItem conn TodoItem {todoId=2, todoTitle="test changed", todoCompleted=True}
+  putStrLn . show =<< removeTodoItem conn TodoItem {todoId=2, todoTitle="test", todoCompleted=False}
+
